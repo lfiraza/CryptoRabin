@@ -72,7 +72,7 @@ def encrypt_file(fromFile, toFile):
         fbytes = fread.read(countedBytes)
         while fbytes:
             enc_msg = encrypt(encode(fbytes))
-            fileWrite.write(enc_msg.to_bytes((enc_msg.bit_length() + 7) // 8, sys.byteorder))
+            fileWrite.write(enc_msg.to_bytes((public.bit_length() + 7) // 8, sys.byteorder))
             fbytes = fread.read(countedBytes)
     fileWrite.close()
 
@@ -84,7 +84,7 @@ def decrypt_file(fromFile, toFile):
         while fbytes:
             fbytes = int.from_bytes(fbytes, sys.byteorder)
             dec_msg = decode(decrypt(fbytes))
-            fileWrite.write(dec_msg.to_bytes((dec_msg.bit_length() + 7) // 8, sys.byteorder))
+            fileWrite.write(dec_msg.to_bytes(countedBytes, sys.byteorder))
             fbytes = fread.read(countedBytes*2)
     fileWrite.close()
         
