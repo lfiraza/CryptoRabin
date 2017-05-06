@@ -1,4 +1,4 @@
-import sys
+import sys, getopt
 
 #config p [0] and q [1] both === 3 mod 4
 private = [67317488495423799828622848507978495932353996728161028786981841987819294308223,
@@ -7,7 +7,7 @@ private = [673174884954237998286228485079784959323539967281610287869818419878192
 #private = [7,11]
 
 countedBytes = 32
-countedCheckSumBits = 64
+countedCheckSumBits = 128
 
 #calc n
 public = private[0]*private[1]
@@ -66,22 +66,72 @@ def decrypt(encrypted):
     return M
 
 
-fileWrite = open("files/plaintext.rab", "wb")
-with open("files/plaintext.txt", "rb") as fread:
-    fbytes = fread.read(countedBytes)
-    while fbytes:
-        enc_msg = encrypt(encode(fbytes))
-        fileWrite.write(enc_msg.to_bytes((enc_msg.bit_length() + 7) // 8, sys.byteorder))
+def encrypt_file(fromFile, toFile):
+    fileWrite = open(toFile, "wb")
+    with open(fromFile, "rb") as fread:
         fbytes = fread.read(countedBytes)
-fileWrite.close()
+        while fbytes:
+            enc_msg = encrypt(encode(fbytes))
+            fileWrite.write(enc_msg.to_bytes((enc_msg.bit_length() + 7) // 8, sys.byteorder))
+            fbytes = fread.read(countedBytes)
+    fileWrite.close()
 
-fileWrite = open("files/pleintext_encoded.txt", "wb")
-with open("files/plaintext.rab", "rb") as fread:
-    fbytes = fread.read(countedBytes*2)
-    while fbytes:
-        fbytes = int.from_bytes(fbytes, sys.byteorder)
-        dec_msg = decode(decrypt(fbytes))
-        fileWrite.write(dec_msg.to_bytes((dec_msg.bit_length() + 7) // 8, sys.byteorder))
+
+def decrypt_file(fromFile, toFile):
+    fileWrite = open(toFile, "wb")
+    with open(fromFile, "rb") as fread:
         fbytes = fread.read(countedBytes*2)
-fileWrite.close()
+        while fbytes:
+            fbytes = int.from_bytes(fbytes, sys.byteorder)
+            dec_msg = decode(decrypt(fbytes))
+            fileWrite.write(dec_msg.to_bytes((dec_msg.bit_length() + 7) // 8, sys.byteorder))
+            fbytes = fread.read(countedBytes*2)
+    fileWrite.close()
         
+
+
+def main(argv):
+
+    method = ''
+    fromFile = ''
+    toFile = ''
+    
+    try:
+        opts, args = getopt.getopt(argv, "hedf:t:", ["help", "encrypt", "decyrypt", "fromfile=", "tofile="])
+    except getopt.GetoptError as error:
+        print(error)
+        sys.exit(2)
+
+    if len(opts) == 0:
+        start("astar", '1', True, False)
+
+    for opt, arg in opts:
+        if opt in ("-h", "--help"):
+            help()
+        elif opt in ("-d", "--decrypt"):
+            method = "dec"
+        elif opt in ("-e", "--encrypt"):
+            method = "enc"
+        elif opt in ("-f", "--fromfile"):
+            fromFile = arg
+        elif opt in ("-t", "--tofile"):
+            toFile = arg
+        else:
+            assert False, "Error"
+
+    if method == 'enc':
+        encrypt_file(fromFile, toFile)
+    elif method == 'dec':
+        decrypt_file(fromFile, toFile)
+
+def help():
+    print("Usage: ./RabinCrypto OPTION [VALUE]")
+    print("Options:")
+    print("     -h --help")
+    print("     -e --encrypt")
+    print("     -d --decrypt")
+    print("     -f --fromfile")
+    print("     -t --tofile")
+
+if __name__ == "__main__":
+    main(sys.argv[1:])    
