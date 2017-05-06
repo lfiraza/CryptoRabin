@@ -7,7 +7,7 @@ private = [673174884954237998286228485079784959323539967281610287869818419878192
 #private = [7,11]
 
 countedBytes = 32
-countedCheckSumBits = 128
+countedCheckSumBits = 64
 
 #calc n
 public = private[0]*private[1]
@@ -20,14 +20,14 @@ bitsForControlSum = int(hexString(countedCheckSumBits), 16)
 
 def encode(msgBytes):
     fbytes = int.from_bytes(msgBytes, sys.byteorder)
-    bytesPlus128 = fbytes << countedCheckSumBits
-    controlSum = fbytes >> countedCheckSumBits*3
-    fbytes = bytesPlus128 | controlSum
+    bytesPlus = fbytes << countedCheckSumBits
+    controlSum = fbytes & bitsForControlSum
+    fbytes = bytesPlus | controlSum
     return fbytes
 
 def decode(M):
     for fbytes in M:
-        controlSum = fbytes >> countedCheckSumBits*4
+        controlSum = (fbytes >> countedCheckSumBits) & bitsForControlSum
         checkerSum = fbytes & bitsForControlSum
         if checkerSum == controlSum:
             return fbytes >> countedCheckSumBits

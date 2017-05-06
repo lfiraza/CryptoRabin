@@ -13,7 +13,7 @@
     <Name>RabinCrypto</Name>
     <RootNamespace>RabinCrypto</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-d -f "files/pp.rab" -t "files/pp.txt"</CommandLineArguments>
+    <CommandLineArguments>-d -t "files/pp.txt" -f "files/pp.rab"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
