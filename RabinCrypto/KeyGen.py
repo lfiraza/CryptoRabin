@@ -118,6 +118,7 @@ class KeyGen(object):
         while True:
             priv_p = this.random_prime(min, max)
             priv_q = this.random_prime(min, max)        
-            if priv_p % 3 != 3 or priv_q % 3 != 3: continue
+            if priv_p % 4 != 3 or priv_q % 4 != 3: 
+                continue
             if priv_p != priv_q: return (priv_p, priv_q)
 
