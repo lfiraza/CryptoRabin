@@ -13,7 +13,7 @@
     <Name>RabinCrypto</Name>
     <RootNamespace>RabinCrypto</RootNamespace>
     <LaunchProvider>Standard Python launcher</LaunchProvider>
-    <CommandLineArguments>-d -t "files/rs_e.pdf" -f "files/rs.rab"</CommandLineArguments>
+    <CommandLineArguments>-d -f "files/rs.rab" -t "files/rs_e.pdf"</CommandLineArguments>
     <EnableNativeCodeDebugging>False</EnableNativeCodeDebugging>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
@@ -25,13 +25,24 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="KeyGen.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="RabinCrypto.py" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="files\" />
+    <Folder Include="keys\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="files\plaintext.txt" />
+    <Content Include="files\pp.rab" />
+    <Content Include="files\pp.txt" />
+    <Content Include="files\rs.pdf" />
+    <Content Include="files\rs.rab" />
+    <Content Include="files\rs_e.pdf" />
+    <Content Include="keys\privkeys.txt" />
+    <Content Include="keys\pubkey.txt" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
